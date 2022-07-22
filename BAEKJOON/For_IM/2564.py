@@ -1,27 +1,57 @@
-def slope(x, y) :
-    global home_x, home_y
-    return ((home_y - y) / (home_x - x))
-
-dist_x, dist_y = map(int, input().split())
+x, y = map(int, input().split())
 n = int(input())
-stores = [0 for _ in range(n)]
-for idx in range(n + 1) :
-    dir, loc = map(int, input().split())
-    if dir == 1 :
-        stores[idx] = (loc, dist_y)
-    elif dir == 2 :
-        stores[idx] = (loc, 0)
-    elif dir == 3 :
-        stores[idx] = (0, loc)
+stores = []
+for _ in range(n) :
+    stores.append(tuple(map(int, input().split())))
+home_dir, home_loc = map(int, input().split())
+
+dist = 0
+for store in stores :
+    if home_dir == 1 :
+        if store[0] == 1 :
+            dist += abs(home_loc - store[1])
+        elif store[0] == 2 :
+            route_a = home_loc + store[1] + y
+            route_b = (x - home_loc) + (x - store[1]) + y
+            dist += route_a if route_a < route_b else route_b
+        elif store[0] == 4 :
+            dist += x - home_loc + store[1]
+        else :
+            dist += home_loc + store[1]
+    elif home_dir == 2 :
+        if store[0] == 1 :
+            route_a = home_loc + store[1] + y
+            route_b = (x - home_loc) + (x - store[1]) + y
+            dist += route_a if route_a < route_b else route_b
+        elif store[0] == 2 :
+            dist += abs(home_loc - store[1])
+        elif store[0] == 4 :
+            dist += (x - home_loc) + (y - store[1])
+        else :
+            dist += home_loc + (y - store[1])
+
+    elif home_dir == 4 :
+        if store[0] == 1 :
+            dist += (x - store[1]) + home_loc
+        elif store[0] == 2 :
+            dist += (x - store[1]) + (y - home_loc)
+        elif store[0] == 4 :
+            dist += abs(home_loc - store[1])
+        else :
+            route_a = home_loc + store[1] + x
+            route_b = (y - home_loc) + (y - store[1]) + x
+            dist += route_a if route_a < route_b else route_b
+    
     else :
-        stores[idx] = (dist_x, loc)
+        if store[0] == 1 :
+            dist += home_loc + store[1]
+        elif store[0] == 2 :
+            dist += (y - home_loc) + store[1]
+        elif store[0] == 4 :
+            route_a = home_loc + store[1] + x
+            route_b = (y - home_loc) + (y - store[1]) + x
+            dist += route_a if route_a < route_b else route_b
+        else :
+            dist += abs(home_loc - store[1])
 
-home_x, home_y = stores[n][0], stores[n][1]
-rev_home_x = dist_x - home_x
-rev_home_y = dist_y - home_y
-home_slope = slope(rev_home_x, rev_home_y)
-
-sum_dist = 0
-for idx in range(n) :
-    if home_slope >= slope(stores[idx][0], stores[idx][1]) :
-        sum_dist += abs(home_x - )
+print(dist)
