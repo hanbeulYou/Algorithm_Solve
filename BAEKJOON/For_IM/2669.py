@@ -1,4 +1,4 @@
-plane = [[0 for _ in range(10)] for __ in range(10)]
+plane = [[0 for _ in range(100)] for __ in range(100)]
 
 for _ in range(4) :
     left_x, left_y, right_x, right_y = map(int, input().split())
@@ -8,7 +8,7 @@ for _ in range(4) :
             plane[y][x] = 1
 
 total_sum = 0
-for y in range(10) :
+for y in range(100) :
     total_sum += sum(plane[y])
     
 print(total_sum)
