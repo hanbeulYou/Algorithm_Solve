@@ -1,29 +1,10 @@
 n, k = map(int, input().split())
+cnt = 0
 
-if n <= k :
-    print(0)
-else :
-    power = []
-    for i in range(25) :
-        power.append(2**i)
+# cnt개의 물병을 구매했을 때 2^x k개로 n을 표현 가능
+# 2진법을 사용해 표현.
+while k < bin(n).count('1'):
+    n += 1
+    cnt += 1
 
-    water = 0
-    while k > 1 and n - water != 0:
-        for i in range(24,0,-1) :
-            if power[i] > n - water and power[i-1] <= n - water :
-                water += power[i-1]
-                k -= 1
-                break
-        else :
-            water += power[0]
-            k -= 1
-            
-    for i in range(24,0,-1) :
-        if power[i] > n - water and power[i-1] <= n - water :
-            water += power[i]
-            k -= 1
-            break
-    else :
-        water += power[0]
-
-    print(water - n)
+print(cnt)
