@@ -1,46 +1,37 @@
 import sys
+
 while True :
     try :
-        x = int(input())
+        x = int(sys.stdin.readline())
         x *= 10000000
-        n = int(input())
+        n = int(sys.stdin.readline())
         legos = []
         for _ in range(n) :
-            lego = int(input())
+            lego = int(sys.stdin.readline())
             if lego >= x :
                 continue
             else :
                 legos.append(lego)
+                
         legos.sort()
         n = len(legos)
         s_idx = 0
         e_idx = n - 1
-
-        yes = True
+        
         while s_idx < e_idx :
-            if legos[s_idx] + legos[e_idx] == x :
+            sum_lego = legos[s_idx] + legos[e_idx]
+            
+            if sum_lego > x :
+                e_idx -= 1
+            
+            elif sum_lego < x :
+                s_idx += 1
+                
+            else :
                 print(f'yes {legos[s_idx]} {legos[e_idx]}')
                 break
-            if legos[s_idx] + legos[e_idx] < x :
-                s_idx += 1
-
-            else :
-                if e_idx - 1 > 0 :
-                    if s_idx == 0 :
-                        print('danger')
-                        yes = False
-                        break
-                    else :
-                        while legos[s_idx] + legos[e_idx - 1] >= x :
-                            s_idx -= 1
-                        e_idx -= 1
-                        continue
-                else :
-                    yes = False
-                    print('danger')
-                    break
-        if yes :
+        else :
             print('danger')
             
-    except EOFError :
+    except :
         break
