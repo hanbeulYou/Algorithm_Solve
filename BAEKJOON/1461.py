@@ -26,7 +26,7 @@ len_n = len(negative)
 while len_p >= m :
     length += positive[0] * 2
     len_p -= m
-    del positive[0:m]
+    del positive[0:m] # m * 1 번 -> POP 이 낫나? 리턴 값이 없어서 굳이 따지자면 del이 속도의 이점이..
 
 if len_p != 0 :
     length += positive[0] * 2
