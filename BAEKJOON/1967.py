@@ -1,23 +1,44 @@
 import sys
+sys.setrecursionlimit(1000000)
 
-def dfs(start, now, next, weight) :
-    global N
-    global far
-    global nodes 
-    for i in range(N) :
-        if nodes[i][0] == next :
-            far[start][next] = dfs(start, next, nodes[i][1], nodes[i][2]) + far[now][next]
-    else :
-        return weight
+def make_table(start, now, weight) :
+#    global table
+    for idx, next_w in enumerate(table[now]) :
+        if next_w != 0 and table[start][idx] == 0:
+            table[start][idx] = weight + next_w
+            make_table(start, idx, weight + next_w)
+    
+n = int(input())
+table = [[0 for _ in range(n + 1)] for _ in range(n + 1)]
+tmp = []
 
-N = int(input())
-nodes = []
-far = [[0 for _ in range(N + 1)] for _ in range(N + 1)]
+for i in range(n-1) :
+    parent, child, weight = map(int, sys.stdin.readline().split())
+    table[parent][parent] = -1
+    table[child][child] = -1
+    table[parent][child] = weight
+    table[child][parent] = weight
+    if parent == 1 :
+        tmp.append((child, weight))
+    
 
-for i in range(N-1) :
-    nodes.append(list(map(int, sys.stdin.readline().split())))
-    far[nodes[i][0]][nodes[i][1]] = nodes[i][2]
+for child, weight in enumerate(table[1]) :
+    if weight :
+        make_table(1, child, weight)
 
-dfs(nodes[0][0], nodes[0][0], nodes[0][1], nodes[0][2])
+max_node = max(table[1])
+max_idx = table[1].index(max_node)
 
-print(far)
+for i in range(n + 1) :
+    table[1][i] = 0
+
+table[1][1] = -1
+for t in tmp :
+    table[1][t[0]] = t[1]
+
+for child, weight in enumerate(table[max_idx]) :
+    if weight :
+        make_table(max_idx, child, weight)
+
+max_w = max(table[max_idx])
+print(max_w)
