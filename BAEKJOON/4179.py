@@ -49,17 +49,16 @@ def bfs_jihoon(i, j, time) :
                         
 
 r, c = map(int, input().split())
-maze = []
 maze_fire = []
 maze_jihoon = []
 fire = ()
 jihoon = ()
 for i in range(r) :
-    maze.append(list(input()))
+    maze = list(input())
     maze_fire.append([])
     maze_jihoon.append([])
 
-    for j, m in enumerate(maze[i]) :
+    for j, m in enumerate(maze) :
         if m == 'J' :
             maze_fire[i].append(0)
             maze_jihoon[i].append(1)
