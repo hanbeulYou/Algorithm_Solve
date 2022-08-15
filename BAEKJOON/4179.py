@@ -1,100 +1,59 @@
 import sys
-sys.setrecursionlimit(1000000)
 
-def bfs_fire(i, j, time) :
-    global maze_fire
-    global r, c
-    if i < r - 1 :
-        if maze_fire[i+1][j] != -1 and (maze_fire[i+1][j] > time + 1 or maze_fire[i+1][j] == 0):
-            maze_fire[i+1][j] = time + 1 
-            bfs_fire(i+1, j, time+1)
-            
-    if i > 0 :
-        if maze_fire[i-1][j] != -1 and (maze_fire[i-1][j] > time + 1 or maze_fire[i-1][j] == 0) :
-            maze_fire[i-1][j] = time + 1 
-            bfs_fire(i-1, j, time+1)
-            
-    if j < c - 1 :
-        if maze_fire[i][j+1] != -1 and (maze_fire[i][j+1] > time + 1 or maze_fire[i][j+1] == 0) :
-            maze_fire[i][j+1] = time + 1
-            bfs_fire(i, j+1, time+1)
-            
-    if j > 0 :
-        if maze_fire[i][j-1] != -1 and (maze_fire[i][j-1] > time + 1 or maze_fire[i][j-1] == 0) :
-            maze_fire[i][j-1] = time + 1 
-            bfs_fire(i, j-1, time+1)
+r, c = map(int, sys.stdin.readline().split())
+maze = []
+maze_fire = [[0 for _ in range(c)] for _ in range(r)]
+maze_jihoon = [[0 for _ in range(c)] for _ in range(r)]
+queue_fire = []
+queue_jihoon = []
 
-def bfs_jihoon(i, j, time) :
-    global maze_jihoon
-    global r, c
-    if i < r - 1 :
-        if maze_jihoon[i+1][j] != -1 and (maze_jihoon[i+1][j] > time + 1 or maze_jihoon[i+1][j] == 0):
-            maze_jihoon[i+1][j] = time + 1 
-            bfs_jihoon(i+1, j, time+1)
-            
-    if i > 0 :
-        if maze_jihoon[i-1][j] != -1 and (maze_jihoon[i-1][j] > time + 1 or maze_jihoon[i-1][j] == 0) :
-            maze_jihoon[i-1][j] = time + 1 
-            bfs_jihoon(i-1, j, time+1)
-            
-    if j < c - 1 :
-        if maze_jihoon[i][j+1] != -1 and (maze_jihoon[i][j+1] > time + 1 or maze_jihoon[i][j+1] == 0) :
-            maze_jihoon[i][j+1] = time + 1
-            bfs_jihoon(i, j+1, time+1)
-            
-    if j > 0 :
-        if maze_jihoon[i][j-1] != -1 and (maze_jihoon[i][j-1] > time + 1 or maze_jihoon[i][j-1] == 0) :
-            maze_jihoon[i][j-1] = time + 1 
-            bfs_jihoon(i, j-1, time+1)
-                        
-
-r, c = map(int, input().split())
-maze_fire = []
-maze_jihoon = []
-fire = ()
-jihoon = ()
 for i in range(r) :
-    maze = list(input())
-    maze_fire.append([])
-    maze_jihoon.append([])
+    maze.append(list(input()))
+    if 'F' in maze[i] :
+        queue_fire.append([i, maze[i].index('F'), 1])
+    if 'J' in maze[i] :
+        queue_jihoon.append([i, maze[i].index('J'), 1])
 
-    for j, m in enumerate(maze) :
-        if m == 'J' :
-            maze_fire[i].append(0)
-            maze_jihoon[i].append(1)
-            jihoon = (i, j)
-        elif m == 'F' :
-            maze_fire[i].append(1)
-            maze_jihoon[i].append(0)
-            fire = (i, j)
-        elif m == '#' :
-            maze_fire[i].append(-1)
-            maze_jihoon[i].append(-1)
-        else :
-            maze_fire[i].append(0)
-            maze_jihoon[i].append(0)
+dir_i = [0, 0, 1, -1]
+dir_j = [1, -1, 0, 0]
 
-bfs_fire(fire[0], fire[1], 1)
-bfs_jihoon(jihoon[0], jihoon[1], 1)
+while queue_fire :
+    n = queue_fire.pop()
+    maze_fire[n[0]][n[1]] = n[2]
+
+    for k in range(4) :
+        next_i = n[0] + dir_i[k]
+        next_j = n[1] + dir_j[k]
+        if 0 <= next_i < r and 0 <= next_j < c :
+            if maze[next_i][next_j] != '#':
+                if maze_fire[next_i][next_j] == 0 or maze_fire[next_i][next_j] > n[2] + 1 :
+                   queue_fire.insert(0, [next_i, next_j, n[2] + 1])
+
+while queue_jihoon :
+    n = queue_jihoon.pop()
+    maze_jihoon[n[0]][n[1]] = n[2]
+
+    for k in range(4) :
+        next_i = n[0] + dir_i[k]
+        next_j = n[1] + dir_j[k]
+        if 0 <= next_i < r and 0 <= next_j < c :
+            if maze[next_i][next_j] != '#':
+                if maze_fire[next_i][next_j] < n[2] + 1 :
+                    continue
+                if maze_jihoon[next_i][next_j] == 0 or maze_jihoon[next_i][next_j] > n[2] + 1 :
+                   queue_jihoon.insert(0, [next_i, next_j, n[2] + 1])
 
 escape = 1000
 for i in range(r) :
-    if maze_jihoon[i][0] != -1 and maze_jihoon[i][0] - maze_fire[i][0] < 0 :
+    if maze_jihoon[i][0] != 0 and maze_jihoon[i][0] - maze_fire[i][0] < 0 :
         if escape > maze_jihoon[i][0] : escape = maze_jihoon[i][0]
-    if maze_jihoon[i][c-1] != -1 and maze_jihoon[i][c-1] - maze_fire[i][c-1] < 0 :
+    if maze_jihoon[i][c-1] != 0 and maze_jihoon[i][c-1] - maze_fire[i][c-1] < 0 :
         if escape > maze_jihoon[i][0] : escape = maze_jihoon[i][c-1]
         
 for j in range(c) :
-    if maze_jihoon[0][j] != -1 and maze_jihoon[0][j] - maze_fire[0][j] < 0 :
+    if maze_jihoon[0][j] != 0 and maze_jihoon[0][j] - maze_fire[0][j] < 0 :
         if escape > maze_jihoon[0][j] : escape = maze_jihoon[0][j]
-    if maze_jihoon[r-1][j] != -1 and maze_jihoon[r-1][j] - maze_fire[r-1][j] < 0 :
+    if maze_jihoon[r-1][j] != 0 and maze_jihoon[r-1][j] - maze_fire[r-1][j] < 0 :
         if escape > maze_jihoon[r-1][j] : escape = maze_jihoon[r-1][j]
-
-for i in range(r) : 
-    for j in range(c) : 
-        print(maze_jihoon[i][j], end='')
-    print(end='  ')
-    for j in range(c) : 
-        print(maze_fire[i][j], end='')
-    print()
+        
 print(escape)
