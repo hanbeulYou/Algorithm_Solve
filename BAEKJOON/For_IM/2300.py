@@ -10,13 +10,15 @@ for i in range(N) :
 
 stations.sort(key=lambda x:(x[0], x[1]))
 
-for i in range(N) :
+stations.insert(0, [0, 0])
+dp.append(0)
+
+for i in range(1, N + 1) :
     height = stations[i][1]
-    minV = max((stations[i][0] - stations[0][0]), height * 2)
+    dp.append(1000000)
     # 0~j까지의 최적합 + j+1~i까지 포함하는 사각형 -> j를 모두 돌려 그중에 최적합을 찾음
     for j in range(i-1, -1, -1) :
         height = max(height, stations[j+1][1])
-        minV = min((dp[j] + max(stations[i][0] - stations[j+1][0], height * 2)), minV)
-    dp.append(minV)
+        dp[i] = min((dp[j] + max(stations[i][0] - stations[j+1][0], height * 2)), dp[i])
 
-print(dp[N-1])
+print(dp[N])
