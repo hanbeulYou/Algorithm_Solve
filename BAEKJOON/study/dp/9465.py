@@ -12,6 +12,7 @@ for _ in range(T) :
     for j in range(n) :
         for i in range(2) :
             other_i = 1^i
-            dp[i][j+2] = max(dp[0][j], dp[1][j], dp[other_i][j+1]) + stickers[i][j]
+#            dp[i][j+2] = max(dp[0][j], dp[1][j], dp[other_i][j+1]) + stickers[i][j]
+            dp[i][j+2] = max(dp[other_i][j], dp[other_i][j+1]) + stickers[i][j]
     
     print(max(map(max, dp[0], dp[1])))

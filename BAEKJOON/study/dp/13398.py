@@ -17,4 +17,6 @@ for idx in range(1, N) :
     # 한 번도 제외 안했을 때 현재 값 제외 vs 앞의 것들에서 한 번이라도 제외했을 때 최선의 해 + 현재 값
     without_dp.append(max(dp[idx-1], without_dp[idx-1]+arr[idx]))
     
+print(dp)
+print(without_dp)
 print(max(map(max, dp, without_dp)))
