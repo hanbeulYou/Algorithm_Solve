@@ -1,6 +1,6 @@
 N = int(input())
 arr = list(map(int, input().split()))
-new_arr = [0]
+new_arr = [-1000000001]
 for item in arr:
     # 더 큰 값이 있으면 추가
     if new_arr[-1] < item:
