@@ -1,24 +1,22 @@
-import heapq
-
 def solution(n, s, a, b, fares):
-    edges = [[] for _ in range(n)]
-    dijkstra = [100000000 for _ in range(n)]
-    dijkstra[s] = 0
-    pq = heapq()
+    inf = 1<<31
+    f_w = [[inf for _ in range(n+1)] for _ in range(n+1)]
+    for i, j, fee in fares:
+        f_w[i][j] = f_w[j][i] = fee
 
-    for fare in fares:
-        edges[fare[0]].append((fare[1], fare[2]))
-        edges[fare[1]].append((fare[0], fare[2]))
+    for i in range(1, n+1):
+        f_w[i][i] = 0
+
+    for k in range(1, n+1):
+        for i in range(1, n+1):
+            for j in range(i+1, n+1):
+                tmp = min(f_w[i][j], f_w[i][k]+f_w[k][j])
+                f_w[i][j] = f_w[j][i] = tmp
     
-    for edge in edges[s]:
-        heapq.heappush(pq, (edge[1], s, edge[0]))
-    
-    while pq:
-        fee, start, end = heapq.heappop(pq)
-        dijkstra[end] = min(dijkstra[start]+fee, dijkstra[end])
-        for edge in edges[end]:
-            heapq.heappush(pq, (edge[1], end, edge[0]))
+    answer = inf
+    for k in range(1, n+1):
+        answer = min(answer, f_w[s][k] + f_w[k][a] + f_w[k][b])
 
-
-    answer = 0
     return answer
+
+print(solution(6, 4, 6, 2, [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]))
