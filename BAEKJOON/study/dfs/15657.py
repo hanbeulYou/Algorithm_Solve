@@ -7,7 +7,7 @@ def dfs(now, depth):
         comb.pop()
         return
     
-    for i in range(N):
+    for i in range(now, N):
         dfs(i, depth+1)
 
     comb.pop()
