@@ -1,5 +1,4 @@
 N = int(input())
-graph = [[] for _ in range(N+1)]
 times = [0 for _ in range(N+1)]
 for i in range(1, N+1):
     input_arr = list(map(int, input().split()))
