@@ -15,4 +15,3 @@ for i in range(1, D+1):
             dp[i] = min(dp[i], dp[start[0]] + start[1])
 
 print(dp[D])
-
